@@ -9,4 +9,4 @@ function fetchModel(url) {
   return models;
 }
 
-export default fetchModel;
+module.exports = models;
