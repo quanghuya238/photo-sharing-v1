@@ -1,12 +1,16 @@
-/**
- * fetchModel - Fetch a model from the web server.
- *
- * @param {string} url      The URL to issue the GET request.
- *
- */
-function fetchModel(url) {
-  const models = null;
-  return models;
+const BASE_URL = "https://yfjqns-8081.csb.app";
+
+async function fetchModel(url, options = {}) {
+  const response = await fetch(`${BASE_URL}${url}`, {
+    credentials: "include",
+    headers: { "Content-Type": "application/json" },
+    ...options,
+  });
+  if (!response.ok) {
+    const text = await response.text();
+    throw new Error(text); // ← throw Error thay vì object
+  }
+  return response.json();
 }
 
-module.exports = models;
+export { fetchModel, BASE_URL };

@@ -1,46 +1,59 @@
-import './App.css';
-
-import React from "react";
-import { Grid, Typography, Paper } from "@mui/material";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-
+import React, { useState } from "react";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { Box } from "@mui/material";
 import TopBar from "./components/TopBar";
-import UserDetail from "./components/UserDetail";
 import UserList from "./components/UserList";
+import UserDetail from "./components/UserDetail";
 import UserPhotos from "./components/UserPhotos";
+import LoginRegister from "./components/LoginRegister";
 
-const App = (props) => {
+function App() {
+  const [currentUser, setCurrentUser] = useState(null);
+  const [title, setTitle] = useState("");
+  const [reloadPhotos, setReloadPhotos] = useState(0);
+
   return (
-      <Router>
-        <div>
-          <Grid container spacing={2}>
-            <Grid item xs={12}>
-              <TopBar />
-            </Grid>
-            <div className="main-topbar-buffer" />
-            <Grid item sm={3}>
-              <Paper className="main-grid-item">
-                <UserList />
-              </Paper>
-            </Grid>
-            <Grid item sm={9}>
-              <Paper className="main-grid-item">
-                <Routes>
-                  <Route
-                      path="/users/:userId"
-                      element = {<UserDetail />}
-                  />
-                  <Route
-                      path="/photos/:userId"
-                      element = {<UserPhotos />}
-                  />
-                  <Route path="/users" element={<UserList />} />
-                </Routes>
-              </Paper>
-            </Grid>
-          </Grid>
-        </div>
-      </Router>
+    <BrowserRouter>
+      <TopBar
+        currentUser={currentUser}
+        onLogout={() => setCurrentUser(null)}
+        title={title}
+        onPhotoUploaded={() => setReloadPhotos((n) => n + 1)}
+      />
+      <div style={{ marginTop: 48 }}>
+        {!currentUser ? (
+          <LoginRegister onLogin={setCurrentUser} />
+        ) : (
+          <div style={{ display: "flex" }}>
+            <div style={{ width: 240, borderRight: "1px solid #ccc" }}>
+              <UserList />
+            </div>
+            <div style={{ flex: 1, padding: 16 }}>
+              <Routes>
+                <Route
+                  path="/users/:userId"
+                  element={<UserDetail setTitle={setTitle} />}
+                />
+                <Route
+                  path="/photos/:userId"
+                  element={
+                    <UserPhotos
+                      setTitle={setTitle}
+                      currentUser={currentUser}
+                      reloadPhotos={reloadPhotos}
+                    />
+                  }
+                />
+                <Route
+                  path="*"
+                  element={<Navigate to={`/users/${currentUser._id}`} />}
+                />
+              </Routes>
+            </div>
+          </div>
+        )}
+      </div>
+    </BrowserRouter>
   );
 }
 
