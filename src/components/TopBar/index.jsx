@@ -1,9 +1,8 @@
-import React, { useRef } from "react";
+import React, { useState } from "react";
+import { AppBar, Toolbar, Typography, Button } from "@mui/material";
 import { BASE_URL } from "../../lib/fetchModelData";
 
 function TopBar({ currentUser, onLogout, title, onPhotoUploaded }) {
-  const fileInputRef = useRef();
-
   const handleUpload = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -19,20 +18,33 @@ function TopBar({ currentUser, onLogout, title, onPhotoUploaded }) {
   };
 
   return (
-    <div style={{ display: "flex", alignItems: "center", padding: "8px 16px", background: "#1a237e", color: "white", position: "fixed", top: 0, width: "100%", zIndex: 1000, boxSizing: "border-box" }}>
-      <b style={{ marginRight: 16 }}>Quang Huya</b>
-      <span style={{ flex: 1 }}>{title}</span>
-      {currentUser ? (
-        <>
-          <input type="file" accept="image/*" ref={fileInputRef} style={{ display: "none" }} onChange={handleUpload} />
-          <button onClick={() => fileInputRef.current.click()} style={{ marginRight: 16 }}>Add Photo</button>
-          <span style={{ marginRight: 16 }}>Hi {currentUser.first_name}!</span>
-          <button onClick={onLogout}>Logout</button>
-        </>
-      ) : (
-        <span>Please Login</span>
-      )}
-    </div>
+    <AppBar>
+      <Toolbar>
+        <Typography fontWeight="bold" sx={{ mr: 2 }}>
+          Nguyen Quang Huy
+        </Typography>
+        <Typography sx={{ flex: 1 }}>{title}</Typography>
+        {currentUser ? (
+          <>
+            <Button color="inherit" sx={{ mr: 2 }} component="label">
+              Add Photo
+              <input
+                type="file"
+                accept="image/*"
+                hidden
+                onChange={handleUpload}
+              />
+            </Button>
+            <Typography sx={{ mr: 2 }}>Hi {currentUser.first_name}!</Typography>
+            <Button color="inherit" onClick={onLogout}>
+              Logout
+            </Button>
+          </>
+        ) : (
+          <Typography>Please Login</Typography>
+        )}
+      </Toolbar>
+    </AppBar>
   );
 }
 

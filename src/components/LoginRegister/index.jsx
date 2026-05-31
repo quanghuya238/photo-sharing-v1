@@ -21,19 +21,23 @@ function LoginRegister({ onLogin }) {
 
   const handleLogin = async () => {
     try {
-      const user = await fetchModel("/admin/login", {
+      const response = await fetch(`https://yfjqns-8081.csb.app/admin/login`, {
         method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           login_name: loginName,
           password: loginPassword,
         }),
       });
-      console.log("user sau login:", user); // ← xem _id là gì
-      console.log("_id:", user._id);
-      console.log("first_name:", user.first_name);
-      if (!user || !user._id) {
-        // ← thêm check này
-        setLoginError("Login failed, try again");
+      if (!response.ok) {
+        const text = await response.text();
+        setLoginError(text);
+        return;
+      }
+      const user = await response.json();
+      if (!user?._id) {
+        setLoginError("Login failed");
         return;
       }
       onLogin(user);
@@ -51,7 +55,16 @@ function LoginRegister({ onLogin }) {
     if (reg.password !== reg.password2)
       return setRegError("Passwords do not match");
     try {
-      await fetchModel("/user", { method: "POST", body: JSON.stringify(reg) });
+      const response = await fetch(`https://yfjqns-8081.csb.app/user`, {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(reg),
+      });
+      if (!response.ok) {
+        setRegError(await response.text());
+        return;
+      }
       setRegSuccess("Registration successful!");
       setReg({
         login_name: "",

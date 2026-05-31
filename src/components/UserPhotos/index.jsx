@@ -13,7 +13,6 @@ function UserPhotos({ setTitle, currentUser }) {
   const [userName, setUserName] = useState("");
   const [commentTexts, setCommentTexts] = useState({});
   const [commentErrors, setCommentErrors] = useState({});
-  const fileInputRef = useRef();
 
   const loadPhotos = () => {
     fetchModel(`/api/photo/photosOfUser/${userId}`).then(setPhotos);

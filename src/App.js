@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { Box } from "@mui/material";
 import TopBar from "./components/TopBar";
 import UserList from "./components/UserList";
 import UserDetail from "./components/UserDetail";
