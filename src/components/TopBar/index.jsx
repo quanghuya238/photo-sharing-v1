@@ -1,14 +1,14 @@
-import React, { useState } from "react";
+import React from "react";
 import { AppBar, Toolbar, Typography, Button } from "@mui/material";
-import { BASE_URL } from "../../lib/fetchModelData";
+import "./styles.css";
 
-function TopBar({ currentUser, onLogout, title, onPhotoUploaded }) {
+function TopBar({ currentUser, handleLogout, title, onPhotoUploaded }) {
   const handleUpload = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
     const formData = new FormData();
     formData.append("photo", file);
-    const response = await fetch(`${BASE_URL}/api/photo/new`, {
+    const response = await fetch(`https://yfjqns-8081.csb.app/api/photo/new`, {
       method: "POST",
       credentials: "include",
       body: formData,
@@ -18,14 +18,16 @@ function TopBar({ currentUser, onLogout, title, onPhotoUploaded }) {
   };
 
   return (
-    <AppBar>
+    <AppBar className="topbar-appBar" position="absolute">
       <Toolbar>
-        <Typography fontWeight="bold" sx={{ mr: 2 }}>
+        <Typography variant="h5" color="inherit" sx={{ mr: 2 }}>
           Nguyen Quang Huy
         </Typography>
-        <Typography sx={{ flex: 1 }}>{title}</Typography>
         {currentUser ? (
           <>
+            <Typography variant="h5" color="inherit" sx={{ flex: 1 }}>
+              {title}
+            </Typography>
             <Button color="inherit" sx={{ mr: 2 }} component="label">
               Add Photo
               <input
@@ -35,13 +37,17 @@ function TopBar({ currentUser, onLogout, title, onPhotoUploaded }) {
                 onChange={handleUpload}
               />
             </Button>
-            <Typography sx={{ mr: 2 }}>Hi {currentUser.first_name}!</Typography>
-            <Button color="inherit" onClick={onLogout}>
+            <Typography variant="h5" color="inherit" sx={{ mr: 2 }}>
+              Hi {currentUser.first_name}!
+            </Typography>
+            <Button color="inherit" onClick={handleLogout}>
               Logout
             </Button>
           </>
         ) : (
-          <Typography>Please Login</Typography>
+          <Typography variant="h5" color="inherit">
+            Please Login
+          </Typography>
         )}
       </Toolbar>
     </AppBar>
