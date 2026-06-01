@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Box, Typography, Button, CircularProgress } from "@mui/material";
-import { fetchModel } from "../../lib/fetchModelData";
+
+const BASE_URL = "https://yfjqns-8081.csb.app";
 
 function UserDetail({ setTitle }) {
   const { userId } = useParams();
@@ -9,10 +10,18 @@ function UserDetail({ setTitle }) {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    fetchModel(`/api/user/${userId}`).then((data) => {
-      setUser(data);
-      setTitle(`${data.first_name} ${data.last_name}`);
-    });
+    fetch(`${BASE_URL}/api/user/${userId}`, {
+      credentials: "include",
+      headers: { "Content-Type": "application/json" },
+    })
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to fetch user");
+        return res.json();
+      })
+      .then((data) => {
+        setUser(data);
+        setTitle(`${data.first_name} ${data.last_name}`);
+      });
   }, [userId]);
 
   if (!user) return <CircularProgress />;
