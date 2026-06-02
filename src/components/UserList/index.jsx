@@ -9,20 +9,14 @@ import {
 import { Link } from "react-router-dom";
 import "./styles.css";
 
-const BASE_URL = "https://yfjqns-8081.csb.app";
-
 function UserList() {
   const [users, setUsers] = useState([]);
 
   useEffect(() => {
-    fetch(`${BASE_URL}/api/user/list`, {
+    fetch(`https://yfjqns-8081.csb.app/api/user/list`, {
       credentials: "include",
-      headers: { "Content-Type": "application/json" },
     })
-      .then((res) => {
-        if (!res.ok) throw new Error("Failed to fetch users");
-        return res.json();
-      })
+      .then((res) => res.json())
       .then((data) => setUsers(data));
   }, []);
 
